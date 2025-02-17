@@ -21,7 +21,7 @@ vault_secrets = [
 # Retrieve the secrets
 
 for secret_id in vault_secrets:
-    rsponse = secrets_client.get_secret_bundle(secret_id)
+    response = secrets_client.get_secret_bundle(secret_id)
     secret_value = response.data.secret_bundle_content.content
 
     # Decode the base64 encoded secret value
