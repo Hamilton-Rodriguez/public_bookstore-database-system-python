@@ -12,9 +12,8 @@ def get_config(region):
 config_sa_bogota = get_config("sa-bogota-1")
 signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
 
-# Initialize the SecretsClient with the Instance Principal signer
-secrets_client = oci.secrets.SecretsClient(config_sa_bogota={}, signer=signer)
-
+# Initialize the SecretsClient
+secrets_client = oci.secrets.SecretsClient(config_sa_bogota)
 
 # Retrieve the vault secrets contents
 
@@ -26,23 +25,18 @@ vault_host = 'ocid1.vaultsecret.oc1.sa-bogota-1.amaaaaaav3pognaa7cw476u7eebw62gy
 response = secrets_client.get_secret_bundle(vault_user)
 vault_user_value = response.data.secret_bundle_content.content
 oci_dbsystem_user = base64.b64decode(vault_user_value).decode('utf-8')
-print("Database User:", oci_dbsystem_user)
 
 response = secrets_client.get_secret_bundle(vault_password)
 vault_password_value = response.data.secret_bundle_content.content
 oci_dbsystem_password = base64.b64decode(vault_password_value).decode('utf-8')
-print("Database Password:", oci_dbsystem_password)
 
 response = secrets_client.get_secret_bundle(vault_database)
 vault_database_value = response.data.secret_bundle_content.content
 oci_dbsystem_database = base64.b64decode(vault_database_value).decode('utf-8')
-print("Database Name:", oci_dbsystem_database)
 
 response = secrets_client.get_secret_bundle(vault_host)
 vault_host_value = response.data.secret_bundle_content.content
 oci_dbsystem_host = base64.b64decode(vault_host_value).decode('utf-8')
-print("Database Host:", oci_dbsystem_host)
-
 
 
 @app.route('/')
@@ -65,4 +59,3 @@ def libros():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
-
